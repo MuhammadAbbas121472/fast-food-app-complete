@@ -10,7 +10,7 @@ import WishlistProvider from "./context/WishlistContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename="/fast-food-app-complete">
       <WishlistProvider>
         <CartProvider>
           <App />
