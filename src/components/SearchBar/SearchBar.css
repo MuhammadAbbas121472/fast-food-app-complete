@@ -1,0 +1,16 @@
+.search-box{
+    margin:40px 0;
+}
+
+.search-box input{
+    width:100%;
+    padding:15px;
+    border:2px solid #ddd;
+    border-radius:10px;
+    font-size:18px;
+    outline:none;
+}
+
+.search-box input:focus{
+    border-color:#e53935;
+}   
