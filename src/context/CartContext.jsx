@@ -1,33 +1,47 @@
-import { createContext, useContext, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+} from "react";
 
 const CartContext = createContext();
 
 export const useCart = () => useContext(CartContext);
 
 function CartProvider({ children }) {
-  const [cart, setCart] = useState([]);
+  // Load cart from localStorage on first render
+  const [cart, setCart] = useState(() => {
+    const savedCart = localStorage.getItem("cart");
+    return savedCart ? JSON.parse(savedCart) : [];
+  });
+
+  // Save cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   // Add To Cart
   const addToCart = (item) => {
-    const exist = cart.find((food) => food.id === item.id);
+    setCart((prevCart) => {
+      const exist = prevCart.find((food) => food.id === item.id);
 
-    if (exist) {
-      setCart(
-        cart.map((food) =>
+      if (exist) {
+        return prevCart.map((food) =>
           food.id === item.id
             ? { ...food, quantity: food.quantity + 1 }
             : food
-        )
-      );
-    } else {
-      setCart([...cart, { ...item, quantity: 1 }]);
-    }
+        );
+      }
+
+      return [...prevCart, { ...item, quantity: 1 }];
+    });
   };
 
-  // Increase
+  // Increase Quantity
   const increaseQuantity = (id) => {
-    setCart(
-      cart.map((item) =>
+    setCart((prevCart) =>
+      prevCart.map((item) =>
         item.id === id
           ? { ...item, quantity: item.quantity + 1 }
           : item
@@ -35,10 +49,10 @@ function CartProvider({ children }) {
     );
   };
 
-  // Decrease
+  // Decrease Quantity
   const decreaseQuantity = (id) => {
-    setCart(
-      cart
+    setCart((prevCart) =>
+      prevCart
         .map((item) =>
           item.id === id
             ? { ...item, quantity: item.quantity - 1 }
@@ -48,9 +62,11 @@ function CartProvider({ children }) {
     );
   };
 
-  // Remove
+  // Remove Item
   const removeItem = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
+    setCart((prevCart) =>
+      prevCart.filter((item) => item.id !== id)
+    );
   };
 
   // Total Price
@@ -59,7 +75,7 @@ function CartProvider({ children }) {
     0
   );
 
-  // Cart Count
+  // Total Cart Items
   const cartCount = cart.reduce(
     (total, item) => total + item.quantity,
     0
