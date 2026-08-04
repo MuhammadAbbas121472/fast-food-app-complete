@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 
 import App from "./App";
 import "./index.css";
@@ -10,12 +10,12 @@ import WishlistProvider from "./context/WishlistContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter basename="/fast-food-app-complete">
+    <HashRouter>
       <WishlistProvider>
         <CartProvider>
           <App />
         </CartProvider>
       </WishlistProvider>
-    </BrowserRouter>
+    </HashRouter>
   </StrictMode>
 );
